@@ -8,8 +8,9 @@
 
 import UIKit
 import SafariServices
+import MessageUI
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate {
     
     
     @IBOutlet weak var imageView: UIImageView!
@@ -20,6 +21,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Do any additional setup after loading the view, typically from a nib.
     }
 
+    
+     // Share button is tapped
     @IBAction func shareButtonTapped(_ sender: UIButton) {
         guard let image = imageView.image else { return }
         let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
@@ -28,6 +31,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         present(activityController, animated: true, completion: nil)
     }
     
+    // Safari button is tapped
     @IBAction func safariButtonTapped(_ sender: UIButton) {
         
         if let url = URL(string: "http://www.apple.com") {
@@ -36,7 +40,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    
+    // Camera Button is Tapped
     @IBAction func cameraButtonTapped(_ sender: UIButton) {
+        
+        
+        
+        
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         
@@ -65,6 +75,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         alertController.popoverPresentationController?.sourceView = sender
         present(alertController, animated: true, completion:  nil)
+        
+        
+        
+        
+        
+        
     }
     
     
@@ -77,7 +93,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     
     
+    // Email Button is tapped
     @IBAction func emailButtonTapped(_ sender: UIButton) {
+        guard MFMailComposeViewController.canSendMail() else {
+            print("Can not send mail")
+            return
+        }
+        let mailComposer = MFMailComposeViewController()
+        mailComposer.mailComposeDelegate = self
+        mailComposer.setToRecipients(["joberry9@hotmail.com"])
+        mailComposer.setSubject("Look at this")
+        mailComposer.setMessageBody("Hello, this is an email from the app i made", isHTML: false)
+        present(mailComposer, animated: true, completion: nil)
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        dismiss(animated: true, completion: nil)
     }
     
     
